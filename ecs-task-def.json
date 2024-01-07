@@ -1,0 +1,65 @@
+{
+  "containerDefinitions": [
+    {
+      "cpu": 0,
+      "essential": true,
+      "image": "712412581856.dkr.ecr.ap-northeast-1.amazonaws.com/php-application:latest",
+      "logConfiguration": {
+        "logDriver": "awsfirelens",
+        "options": {
+          "Name": "s3",
+          "bucket": "fire-lens-test-sdlkfadgf",
+          "region": "ap-northeast-1",
+          "total_file_size": "1M",
+          "upload_timeout": "1m",
+          "use_put_object": "On"
+        }
+      },
+      "name": "php-sample-app",
+      "portMappings": [
+        {
+          "appProtocol": "http",
+          "containerPort": 80,
+          "hostPort": 80,
+          "name": "php-sample-app-80-tcp",
+          "protocol": "tcp"
+        }
+      ]
+    },
+    {
+      "cpu": 0,
+      "essential": true,
+      "firelensConfiguration": {
+        "type": "fluentbit"
+      },
+      "image": "public.ecr.aws/aws-observability/aws-for-fluent-bit:stable",
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-create-group": "true",
+          "awslogs-group": "/ecs/php-sample-appliacation",
+          "awslogs-region": "ap-northeast-1",
+          "awslogs-stream-prefix": "firelens"
+        }
+      },
+      "memoryReservation": 50,
+      "name": "log_router",
+      "user": "0"
+    }
+  ],
+  "cpu": "1024",
+  "executionRoleArn": "arn:aws:iam::712412581856:role/ecsTaskExecutionRole",
+  "family": "php-sample-appliacation",
+  "ipcMode": "",
+  "memory": "3072",
+  "networkMode": "awsvpc",
+  "pidMode": "",
+  "requiresCompatibilities": [
+    "FARGATE"
+  ],
+  "runtimePlatform": {
+    "cpuArchitecture": "ARM64",
+    "operatingSystemFamily": "LINUX"
+  },
+  "taskRoleArn": "arn:aws:iam::712412581856:role/put-encrypt-s3"
+}
